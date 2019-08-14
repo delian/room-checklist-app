@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'db.dart';
 
 void main() => runApp(MyApp());
 
@@ -39,6 +40,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.settings),
+            tooltip: 'Settings',
+            onPressed: () {
+              // Nothing
+            }
+          )
+        ],
       ),
       body: Center(
         child: Column(

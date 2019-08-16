@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'db.dart';
+import 'structs.dart';
+import 'reports_presenter.dart';
+import 'reports_list.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,8 +29,21 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> implements ReportContract {
   int _counter = 0;
+
+  ReportsPresenter reportsPresenter;
+
+  @override
+  void initState() {
+    super.initState();
+    reportsPresenter = new ReportsPresenter(this);
+  }
+
+  displayRecord() {
+    setState(() {
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -50,25 +66,22 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: new FutureBuilder<List<Reports>>(
+        future: ReportsPresenter.getReports(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
+          var data = snapshot.data;
+          return snapshot.hasData ?
+              new ReportsList(data, reportsPresenter) :
+              new Center(child: new CircularProgressIndicator());
+        },
+      )
     );
+  }
+
+  @override
+  void screenUpdate() {
+    setState(() {
+    });
   }
 }
